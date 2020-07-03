@@ -1,83 +1,127 @@
 import pyxel
+from random import randint
 
-# класс определения позиции
-class Position:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-class ImagePosition:
-    def __init__(self, x, y):
-        self.pos = Position(x, y)
-
-# класс квадрата
-class Square:
-    def __init__(self, img_id):
-        self.pos = Position(0, 80)
-        self.size_y = 10
-        self.size_x = 10
-        self.img_square = img_id
-        self.get_image = ImagePosition(0, 0)
-        self.color_tr = 0
-
-    def update(self, x, y):
-        self.pos.x = x
-        self.pos.y = y
-
-# класс треугольника
-class Triangle:
-    def __init__(self, img_id):
-        self.pos = Position(0, 0)
-        self.size_y = 10
-        self.size_x = 7
-        self.speed = -0.2
-        self.img_square = img_id
-        self.get_image = ImagePosition(0, 16)
-        self.color_tr = 2
-
-    def update(self, x, y):
-        self.pos.x = x
-        self.pos.y = y
-
-class App:
+# класс игры
+class SquareRun:
     def __init__(self):
-        self.IMG_ID0 = 0                              # id картинки
-        WIDTH = 160
-        HEIGHT = 120
-
-        pyxel.init(WIDTH, HEIGHT, caption='Square_Run')    # запуск окна, его ширина, высота и название
-        pyxel.load(r'pyxel\triangle.pyxres')          # загрузка tilemap
-        pyxel.image(1).load(0, 0, 'background.png')   # загрузка фона
-
-        self.square = Square(self.IMG_ID0)
-        self.x = 20              # положение квадрата х
-        self.y = 80              # положение квадрата у
-
-        self.triangles = []                  # список с треугольниками
-        self.platforms = []                  # список с платформами
-        pyxel.run(self.update, self.draw)    # запуск игры
+        self.start_game = 0                     # начальный экран
+        self.score = 0                          # счёт игрока
+        self.highscore = 0                      # рекорд
+        self.player_x = 30                      # расположение игрока по х
+        self.player_y = 100                     # расположение игрока по у
+        self.player_vy = 0                      # множитель
+        self.WIDTH = 160                        # ширина окна
+        self.HEIGHT = 120                       # высота окна
+        self.clouds = [(10, 25), (70, 35), (120, 15)]
+        self.enemy = [(i * 60, randint(8, 104), True) for i in range(2)]                    # 3 аргумента
+        self.square = [(i * 60, randint(0, 104), randint(0, 4), True) for i in range(4)]    # 4 аргумента
+        pyxel.init(self.WIDTH, self.HEIGHT, caption="Square Run")    # размер окна, название окна
+        pyxel.image(0).load(0, 0, "pics/logo.png")                   # путь к лого
+        pyxel.run(self.update, self.draw)                            # запуск программы
 
     def update(self):
-        if pyxel.btnp(pyxel.KEY_Q):          # Q выход из игры
+        if pyxel.btnp(pyxel.KEY_Q):             # выход из игры по Q
             pyxel.quit()
-
-        if pyxel.btn(pyxel.KEY_SPACE):
-            self.square.update(self.square.pos.x, self.square.pos.y+10)
-
-        triangle_count = len(self.triangles)
-        if triangle_count < 2:
-            new_triangle = Triangle(self.IMG_ID0)
-
-        for triangle in range(triangle_count):
-            self.Triangle[triangle].update(self.Triangle[triangle].pos.x + self.Triangles[triangle].speed, self.Triangles[triangle].pos.y)
-
-
+        elif pyxel.btnp(pyxel.KEY_TAB):         # переход на следующий экран по TAB
+            self.start_game = 1                 # переход на экран игры
+            pyxel.play(1, 7, loop=True)         # музыка во время игры 1 канал
+            pyxel.play(2, 5)                    # звук при нажатии на TAB
+            if self.highscore < self.score:     # логика рекорда
+                self.highscore = self.score
+            elif self.highscore >= self.score:
+                pass
+            self.score = 0                  # обнуление счёта
+        elif self.start_game == 1:          # если игра запущена то запускаем функцию игрока, врагов и друзей
+            self.update_player()
+            for i, v in enumerate(self.enemy):
+                self.enemy[i] = self.update_enemy(*v)
+            for i, v in enumerate(self.square):
+                self.square[i] = self.update_square(*v)
 
     def draw(self):
-        pyxel.cls(0)
-        pyxel.blt(0, 0, 1, 0, 0, 160, 120, 0)       # фон
-        pyxel.blt(self.square.pos.x, self.square.pos.y, self.square.img_square, self.square.get_image.pos.x, self.square.get_image.pos.y, 0, 80, colkey=-1)
+        if self.start_game == 0:                                                     # ЭКРАН Начало игры
+            pyxel.cls(0)                                                             # фон с аргументом чёрный
+            pyxel.text(56, self.HEIGHT // 3, "Welcome to", pyxel.frame_count % 16)   # мигающий текст с координатами
+            pyxel.text(37, self.HEIGHT - self.HEIGHT // 3, "Press TAB to start!", pyxel.frame_count % 16)
+            pyxel.blt(58, 55, 0, 0, 0, 38, 16)                                       # параметры лого
+        elif self.start_game == 2:                                                   # ЭКРАН Конец игры
+            self.player_x = -10                                          # прячем гг за экран чтобы не набирались очки
+            self.player_y = -10
+            pyxel.cls(0)
+            if self.score > self.highscore:
+                pyxel.text(46, 31, f"New Best: {self.score}!", pyxel.frame_count % 16)
+            else:
+                pyxel.text(46, 31, f"Highscore: {self.highscore}", pyxel.frame_count % 16)
+                pyxel.text(46, 41, f"Your score: {self.score}", pyxel.frame_count % 16)
+            pyxel.text(58, 21, "GAME OVER!", pyxel.frame_count % 16)
+            pyxel.text(37, 81, "Press TAB to Restart!", pyxel.frame_count % 16)
+            pyxel.text(45, 91, "Press Q to Quit!", pyxel.frame_count % 16)
+            pyxel.blt(58, 55, 0, 0, 0, 38, 16)
+        elif self.start_game == 1:                                                   # ЭКРАН Игра
+            pyxel.cls(13)
+            pyxel.load("square_run_assets.pyxres")                                   # загружаем скины
+            offset = (pyxel.frame_count // 8) % 160                                 # рисуем облака
+            for i in range(2):
+                for x, y in self.clouds:
+                    pyxel.blt(x + i * 160 - offset, y, 0, 0, 32, 56, 8, 12)
+                    pyxel.blt(x + i * 160 - offset, y + 20, 0, 0, 32, 56, 8, 12)
+            offset = pyxel.frame_count % 160                                        # движущийся фон низ
+            for i in range(2):
+                pyxel.blt(i * 160 - offset, 104, 0, 0, 48, 160, 16, 12)
 
+            pyxel.blt(self.player_x, self.player_y,                                  # рисуем гг
+                      0,
+                      0 if self.player_vy > 0 else 0,
+                      0, 16, 16, 13)
+            s = "SCORE {:>4}".format(self.score)                                     # формат отображения счёта
+            pyxel.text(5, 4, s, 1)
+            pyxel.text(4, 4, s, 7)
+            for x, y, is_active in self.enemy:                                       # рисуем врагов
+                pyxel.blt(x, y, 0, 0, 16, 24, 8, 13)
+            for x, y, kind, is_active in self.square:                                # рисуем друзей
+                if is_active:
+                    pyxel.blt(x, y, 0, 16 + kind * 16, 0, 16, 16, 13)
 
+    def update_player(self):
+        # назначаем управление на кнопки, ограничиваем передвижение экраном
+        if pyxel.btn(pyxel.KEY_W) or pyxel.btn(pyxel.KEY_UP):
+            self.player_y = max(self.player_y - 5, 0)
+        if pyxel.btn(pyxel.KEY_S) or pyxel.btn(pyxel.KEY_DOWN):
+            self.player_y = min(self.player_y + 5, self.HEIGHT - 16)
+        if pyxel.btn(pyxel.KEY_D) or pyxel.btn(pyxel.KEY_RIGHT):
+            self.player_x = min(self.player_x + 5, self.WIDTH - 16)
+        if pyxel.btn(pyxel.KEY_A) or pyxel.btn(pyxel.KEY_LEFT):
+            self.player_x = max(self.player_x - 5, 0)
 
+    def update_enemy(self, x, y, is_active):
+        # Столкновение с игроком
+        if is_active and abs(x - self.player_x) < 12 and abs(y - self.player_y) < 12:
+            pyxel.play(2, 4)                                # звук при умирании во 2 канал
+            pyxel.play(1, 2)                                # музыка при умирании в 1 канал
+            self.start_game = 2                             # Игра окончена
 
-App()
+        x -= 4                       # скорость полёта врагов (шаг по х)
+        if x < -40:                  # враги пропадают за экраном в минусе по х и появляются справа за экраном
+            x += 240
+            y = randint(8, 104)
+
+        return x, y, is_active
+
+    def update_square(self, x, y, kind, is_active):
+        # если мы сталкиваемся с другом
+        if is_active and abs(x - self.player_x) < 12 and abs(y - self.player_y) < 12:
+            is_active = False
+            self.score += (kind + 1) * 100                   # +100 очков за каждого друга
+            pyxel.play(2, 4)                                 # звук при столкновении с другом во 2 канал
+
+        x -= 2
+
+        if x < -40:
+            x += 240
+            y = randint(0, 104)
+            kind = randint(0, 2)
+            is_active = True
+
+        return x, y, kind, is_active
+
+SquareRun()
