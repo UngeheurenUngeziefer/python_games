@@ -9,14 +9,13 @@ class SquareRun:
         self.highscore = 0                      # рекорд
         self.player_x = 30                      # расположение игрока по х
         self.player_y = 100                     # расположение игрока по у
-        self.player_vy = 0                      # множитель
         self.WIDTH = 160                        # ширина окна
         self.HEIGHT = 120                       # высота окна
         self.clouds = [(10, 25), (70, 35), (120, 15)]
-        self.enemy = [(i * 60, randint(8, 104), True) for i in range(2)]                    # 3 аргумента
+        self.enemy = [(i * 80, randint(8, 104), True) for i in range(2)]                    # 3 аргумента
         self.square = [(i * 60, randint(0, 104), randint(0, 4), True) for i in range(4)]    # 4 аргумента
         pyxel.init(self.WIDTH, self.HEIGHT, caption="Square Run")    # размер окна, название окна
-        pyxel.image(0).load(0, 0, "pics/logo.png")                   # путь к лого
+        pyxel.image(0).load(0, 0, "../Square_Run/pics/logo.png")     # путь к лого
         pyxel.run(self.update, self.draw)                            # запуск программы
 
     def update(self):
@@ -60,19 +59,16 @@ class SquareRun:
         elif self.start_game == 1:                                                   # ЭКРАН Игра
             pyxel.cls(13)
             pyxel.load("square_run_assets.pyxres")                                   # загружаем скины
-            offset = (pyxel.frame_count // 8) % 160                                 # рисуем облака
+            offset = (pyxel.frame_count // 8) % 160                                  # рисуем облака
             for i in range(2):
                 for x, y in self.clouds:
                     pyxel.blt(x + i * 160 - offset, y, 0, 0, 32, 56, 8, 12)
                     pyxel.blt(x + i * 160 - offset, y + 20, 0, 0, 32, 56, 8, 12)
-            offset = pyxel.frame_count % 160                                        # движущийся фон низ
+            offset = pyxel.frame_count % 160                                         # движущийся фон низ
             for i in range(2):
                 pyxel.blt(i * 160 - offset, 104, 0, 0, 48, 160, 16, 12)
 
-            pyxel.blt(self.player_x, self.player_y,                                  # рисуем гг
-                      0,
-                      0 if self.player_vy > 0 else 0,
-                      0, 16, 16, 13)
+            pyxel.blt(self.player_x, self.player_y, 0, 0, 0, 16, 16, 13)             # рисуем гг
             s = "SCORE {:>4}".format(self.score)                                     # формат отображения счёта
             pyxel.text(5, 4, s, 1)
             pyxel.text(4, 4, s, 7)
@@ -111,17 +107,14 @@ class SquareRun:
         # если мы сталкиваемся с другом
         if is_active and abs(x - self.player_x) < 12 and abs(y - self.player_y) < 12:
             is_active = False
-            self.score += (kind + 1) * 100                   # +100 очков за каждого друга
+            self.score += (kind + 1) * 100                   # +100 очков за квадрат, +200 за прямоуг., +300 за треуг.
             pyxel.play(2, 4)                                 # звук при столкновении с другом во 2 канал
-
         x -= 2
-
         if x < -40:
             x += 240
             y = randint(0, 104)
             kind = randint(0, 2)
             is_active = True
-
         return x, y, kind, is_active
 
 SquareRun()
