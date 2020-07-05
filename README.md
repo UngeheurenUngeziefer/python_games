@@ -41,3 +41,6 @@ Controls: `arrows` and `wasd`
 Race pixel-style game:
 ##### Start screen:<br />
 ![start_screen](PyXel/Road_Rush/pics/road_rush_start_screen.gif)
+
+##### Ver 0.1
+![gameplay](PyXel/Road_Rush/pics/road_rush_ver_0_1.gif)
