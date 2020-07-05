@@ -1,11 +1,11 @@
 import pygame
-MAX_X = 1090
-MAX_Y = 1080
+MAX_X = 600
+MAX_Y = 200
 game_over = False
 bg_color = (10, 10, 10)
 
 pygame.init()
-screen = pygame.display.set_mode((MAX_X, MAX_Y), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((MAX_X, MAX_Y))
 pygame.display.set_caption('My first Pygame Game: ')
 
 print(pygame.image.get_extended())
@@ -13,8 +13,8 @@ print(pygame.image.get_extended())
 myimage = pygame.image.load('flag.jpg').convert()
 myimage = pygame.transform.scale(myimage, (160,100))
 
-x = 500
-y = 100
+x = MAX_X // 2
+y = MAX_Y // 2
 
 #------------main game loop
 

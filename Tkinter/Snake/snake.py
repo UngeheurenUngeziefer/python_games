@@ -2,7 +2,6 @@ import tkinter as tk
 from random import randint
 from PIL import Image, ImageTk
 
-
 MOVE_INCREMENT = 20
 MOVES_PER_SECOND = 15
 GAME_SPEED = 1000 // MOVES_PER_SECOND

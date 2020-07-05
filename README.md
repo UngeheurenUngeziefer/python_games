@@ -1,23 +1,43 @@
-# MyPygames
-### 1. Snow Screensaver<br />
-### 2. Snake Game by arrows<br />
-### 3. Pyxel<br />
-Game created with [PyXel](https://github.com/kitao/pyxel) Python framework.
+# Python Games <br />
+## [PyGame](https://github.com/pygame/pygame/) <br />
+### 1. Image Movers <br />
+Experiments with PyGame:
+![pygame1](/PyGame/Move_Image/pygame1.gif)
+![pygame2](/PyGame/Move_Image/pygame2.gif)
 
-#### Pyxel Editor:<br />
-In  editor you have to create skins and songs<br />
+### 2. Snow Screensaver <br />
+Screensaver Snowfall:
+![snowfall](/PyGame/Snowfall/snowfall.gif)
+
+## [Tkinter](https://docs.python.org/3/library/tkinter.html) <br />
+### 1. Snake <br />
+Snake Game:
+![snake](/Tkinter/Snake/snake.gif)
+
+## [PyXel](https://github.com/kitao/pyxel) <br />
+### Pyxel Editor: <br />
+In  editor you have to create skins and songs <br />
 `square_run_assets.pyxres` file:
 ![pyxel editor](PyXel/Square_Run/pics/pyxeleditor.png)
 ![pyxel editor](PyXel/Square_Run/pics/song_editor.png)
 
-#### Start screen:<br />
+### 1. Square Run<br />
+Square pixel-style game, with enemies, friends, moving and stable backgrounds.<br />
+Controls: `arrows` and `wasd`
+
+##### Start screen:<br />
 ![start_screen](PyXel/Square_Run/pics/start_screen.gif)
 
-#### Gameplay:<br />
+##### Gameplay:<br />
 ![gameplay](PyXel/Square_Run/pics/gameplay.gif)
 
-#### First Final Screen :<br />
+##### First Final Screen :<br />
 ![gameplay](PyXel/Square_Run/pics/final1.gif)
 
-Second Final Screen :<br />
-#### ![gameplay](PyXel/Square_Run/pics/final2.gif)
+##### Second Final Screen :<br />
+![gameplay](PyXel/Square_Run/pics/final2.gif)
+
+### 2. Road Rush<br />
+Race pixel-style game:
+##### Start screen:<br />
+![start_screen](PyXel/Road_Rush/pics/road_rush_start_screen.gif)
