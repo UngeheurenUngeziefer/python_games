@@ -12,7 +12,7 @@ class SquareRun:
         self.WIDTH = 160                        # ширина окна
         self.HEIGHT = 120                       # высота окна
         self.clouds = [(10, 25), (70, 35), (120, 15)]
-        self.enemy = [(i * 80, randint(8, 104), True) for i in range(2)]                    # 3 аргумента
+        self.enemy = [(i * 80, randint(8, 104), True) for i in range(3)]                    # 3 аргумента
         self.square = [(i * 60, randint(0, 104), randint(0, 4), True) for i in range(4)]    # 4 аргумента
         pyxel.init(self.WIDTH, self.HEIGHT, caption="Square Run")    # размер окна, название окна
         pyxel.image(0).load(0, 0, "../Square_Run/pics/logo.png")     # путь к лого
