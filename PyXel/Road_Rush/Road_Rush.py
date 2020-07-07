@@ -20,13 +20,13 @@ class RoadRush:
         self.progress_y = 129
         self.road_markdown = 1
         self.road_start = 120
-        self.cars_number = 1
+        self.cars_number = 2
 
         pyxel.init(self.width, self.height, caption="Road Rush")         # размер окна, название окна
         pyxel.image(1).load(0, 0, "./pics/logo.png")                     # пути 0 - tilemap, 1 - logo, 2 - back
-        self.enemy = [(i * randint(self.road_x1, self.road_x2),
-                       max(self.enemy_speed * 150, 600),
-                       True) for i in range(self.cars_number)]  # х внутри дороги, y за экраном на расстоянии в зависимости от скорости, True
+        self.enemy = [(i * 80,
+                       randint(self.enemy_speed * 150, 1000),
+                       True) for i in range(self.cars_number)]           # х внутри дороги, y за экраном на расстоянии в зависимости от скорости, True
         pyxel.run(self.update, self.draw)                                # запуск программы
 
     def update(self):
@@ -63,10 +63,8 @@ class RoadRush:
         elif self.start_game == 1:
             pyxel.load("./road_rush_assets.pyxres")                     # загружаем скины из tilemap
             pyxel.image(2).load(0, 0, "./pics/Road_Rush_Map_0.png")     # путь к бэку 1 уровня
-
             # х игры, у игры, файл, х в файле, у в файле, x2 в файле, у2 в файле, колкей
             pyxel.blt(0, 0, 2, 0, 0, self.width, self.height)               # back
-
             pyxel.blt(43, self.road_start, 0, 0, 42, 60, 52, 7)             # линия старта
             pyxel.blt(39, -30, 0, 91, 0, 94, 199, 13)                       # разметка и поребрик
             pyxel.blt(self.player_x, self.player_y, 0, 0, 0, 8, 16, 13)     # гг
@@ -86,7 +84,7 @@ class RoadRush:
         # ИГРА
         elif self.start_game == 2:
             # х игры, у игры, файл, х в файле, у в файле, x2 в файле, у2 в файле, колкей
-            pyxel.blt(0, 0, 2, 0, 0, self.width, self.height)            # back
+            pyxel.blt(0, 0, 2, 0, 0, self.width, self.height)  # back
             pyxel.blt(39, self.road_markdown, 0, 91, 0, 94, 199, 13)  # разметка и поребрик
             pyxel.blt(43, self.road_start, 0, 0, 42, 60, 52, 7)            # линия старта
             pyxel.blt(self.player_x, self.player_y, 0, 0, 0, 8, 16, 13)  # гг
@@ -96,12 +94,13 @@ class RoadRush:
                 self.progress_y -= 4        # поднимаем ползунок прогресса на 4 вверх
             elif self.progress_y < 10:
                 self.start_game = 3         # переходим на экран финиша
-            elif self.progress_y < 100:
-                self.cars_number = 2
+            # elif self.progress_y > 100:
+            #     self.cars_number = 3
 
             for x, y, is_active in self.enemy:                           # рисуем врагов
                 pyxel.blt(x, -y, 0, 8, 0, 8, 16, 13)
             self.show_score_highscore()
+
 
         # ФИНИШ
         elif self.start_game == 3:
@@ -124,6 +123,7 @@ class RoadRush:
             self.clock = 0
 
     def update_enemy(self, x, y, is_active):
+
         # Столкновение с игроком, х и у соперников отличаются меньше чем размер корпуса авто гг
         if is_active and abs(x - self.player_x) < 8 and abs(y - (-self.player_y)) < 16:
             self.counter = -1         # счётчик обнуляется
