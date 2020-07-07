@@ -98,7 +98,10 @@ class RoadRush:
             #     self.cars_number = 3
 
             for x, y, is_active in self.enemy:                           # рисуем врагов
-                pyxel.blt(x, -y, 0, 8, 0, 8, 16, 13)
+                if x in range(self.road_x1, self.road_x2 - 8):  # ограничение дорогой (минус ширина корпуса авто)
+                    pyxel.blt(x, -y, 0, 8, 0, 8, 16, 13)
+                else:
+                    pass
             self.show_score_highscore()
 
 
