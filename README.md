@@ -51,5 +51,7 @@ Race pixel-style game:
 ##### Ver 0.3
 ![gameplay](PyXel/Road_Rush/pics/road_rush_ver_0_3.gif)
 
+##### Ver 0.4
+![gameplay](PyXel/Road_Rush/pics/road_rush_ver_0_4.gif)
 
 
