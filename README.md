@@ -1,18 +1,18 @@
 # Python Games <br />
 ## [PyGame](https://github.com/pygame/pygame/) <br />
 ### 1. Image Movers <br />
-Experiments with PyGame:
-![pygame1](/PyGame/Move_Image/pygame1.gif)
-![pygame2](/PyGame/Move_Image/pygame2.gif)
+Experiments with PyGame: <br />
+
+<img src="/PyGame/Move_Image/pygame1.gif" width="400"> <img src="/PyGame/Move_Image/pygame2.gif" width="400">
 
 ### 2. Snow Screensaver <br />
 Screensaver Snowfall:
-![snowfall](/PyGame/Snowfall/snowfall.gif)
+<img src="/PyGame/Snowfall/snowfall.gif" width="800">
 
 ## [Tkinter](https://docs.python.org/3/library/tkinter.html) <br />
 ### 1. Snake <br />
-Snake Game:
-![snake](/Tkinter/Snake/snake.gif)
+Snake Game: <br />
+<img src="/Tkinter/Snake/snake.gif" width="400">
 
 ## [PyXel](https://github.com/kitao/pyxel) <br />
 ### Pyxel Editor: <br />
@@ -43,7 +43,8 @@ Race pixel-style game:
 ![start_screen](PyXel/Road_Rush/pics/road_rush_start_screen.gif)
 
 ##### Ver 0.1
-![gameplay](PyXel/Road_Rush/pics/road_rush_ver_0_1.gif)
+<img src="![gameplay](PyXel/Road_Rush/pics/road_rush_ver_0_1.gif)" width="48%">
+
 
 ##### Ver 0.2
 ![gameplay](PyXel/Road_Rush/pics/road_rush_ver_0_2.gif)
