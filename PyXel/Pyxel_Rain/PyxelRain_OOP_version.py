@@ -1,22 +1,27 @@
 import pyxel
 from random import randint
+from abc import ABC, abstractmethod
 
-class PyxelRain:
+class Game:
+
     def __init__(self):
         self.width, self.height = 100, 100
-        self.player_x, self.player_y = 43, 83
-        self.enemy = [(i * 8, randint(0, 300)) for i in range(10)]
-        self.friend = [(i * 8, randint(0, 300)) for i in range(10)]
         self.score = 0
+        self.lvl = 0
         self.highscore_file = open('score.txt', 'r').read()
         self.highscore = open('score.txt', 'r').read()
-        self.is_alive = True
-        self.lvl = 0
-
-        self.pos_x1, self.pos_y1, self.pos_x2, self.pos_y2 = 0, 0, 7, 7  # координаты модели гг
-
         pyxel.init(self.width, self.height, caption="Pyxel Rain")  # размер окна, название окна
-        pyxel.run(self.update, self.draw)  # запуск программы
+        pyxel.run(self.update, self.draw)                          # запуск программы
+        self.is_alive = True
+
+    def width(self):
+        return self.width
+
+    def height(self):
+        return self.height
+
+    def score(self):
+        return self.score
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_TAB):
@@ -46,23 +51,21 @@ class PyxelRain:
                 self.lvl = 10
 
         if self.lvl in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-            self.player_controls()
-            for i, v in enumerate(self.enemy):  # генерируем случайные авто противника
-                self.enemy[i] = self.update_enemy(*v)
-            for i, v in enumerate(self.friend):  # генерируем случайные авто противника
-                self.friend[i] = self.update_friend(*v)
+            Player.player_controls(Player())
+            for i, v in enumerate(NPC.enemy):  # генерируем случайные авто противника
+                NPC.enemy[i] = NPC.update_enemy(*v)
+            for i, v in enumerate(NPC.friend):  # генерируем случайные авто противника
+                NPC.friend[i] = NPC.update_friend(*v)
 
         if pyxel.btnp(pyxel.KEY_Q):  # выход из игры по Q
             pyxel.quit()
         if pyxel.btnp(pyxel.KEY_R):  # рестарт на R
             pyxel.play(1, 2, loop=True)
             self.lvl = 1
-            self.is_alive = True
             if self.score > int(self.highscore):
                 open('score.txt', 'w').write(f'{self.score}')
                 self.highscore = self.score
             self.score = 0
-            self.player_x, self.player_y = 43, 83
 
         if pyxel.btnp(pyxel.KEY_TAB):  # начало игры по TAB
             pass
@@ -100,50 +103,13 @@ class PyxelRain:
                 pyxel.cls(14)
             elif self.lvl == 13:
                 pyxel.cls(15)
-            self.draw_guys()
+            NPC.draw_guys(NPC())
             self.draw_score()
         elif not self.is_alive:
             pyxel.cls(0)
-            self.draw_guys()
+            NPC.draw_guys(NPC())
             self.draw_score()
             self.death_line()
-
-    def update_enemy(self, x, y):
-        if abs(x - self.player_x) < 7 and abs(y - (-self.player_y)) < 7:
-            y = 400
-            self.is_alive = False
-            pyxel.play(1, 1)
-        if self.is_alive:
-            y -= 2
-        elif not self.is_alive:
-            y -= 0.2
-        if y < -300:
-            y += 300
-            x = randint(0, 93)
-        return x, y
-
-    def update_friend(self, x, y):
-        if abs(x - self.player_x) < 7 and abs(y - (-self.player_y)) < 7:
-            y = 400
-            self.score += 10
-            pyxel.play(0, 0)
-        if self.is_alive:
-            y -= 2
-        elif not self.is_alive:
-            y -= 0.2
-
-        if y < -300:
-            y += 300
-            x = randint(0, 93)
-
-        return x, y
-
-    def draw_guys(self):
-        pyxel.blt(self.player_x, self.player_y, 0, self.pos_x1, self.pos_y1, self.pos_x2, self.pos_y2, 13)  # гг
-        for x, y in self.enemy:  # рисуем врагов
-            pyxel.blt(x, -y, 0, 0, 7, 7, 13, 13)
-        for x, y in self.friend:  # рисуем друзей
-            pyxel.blt(x, -y, 0, 7, 7, 13, 13, 13)
 
     def draw_score(self):
         pyxel.rect(0, 0, 100, 8, 8)
@@ -160,11 +126,29 @@ class PyxelRain:
         pyxel.text(10, 65, f'Your score is {self.score}', pyxel.frame_count % 16)
         pyxel.text(25, 75, 'R to Restart', pyxel.frame_count % 16)
 
+
+class Player:
+    def __init__(self):
+        self.player_x, self.player_y = 43, 83
+        self.is_alive = True
+        self.pos_x1, self.pos_y1, self.pos_x2, self.pos_y2 = 0, 0, 7, 7  # координаты модели гг
+
+    def coords(self):
+        return self.pos_x1, self.pos_y1, self.pos_x2, self.pos_y2
+
+    def player_x(self):
+        return self.player_x
+
+    def player_y(self):
+        return self.player_y
+
+
+
     def player_controls(self):
         if self.is_alive:
             # назначаем управление на кнопки, ограничиваем передвижение экраном
             if pyxel.btn(pyxel.KEY_D) or pyxel.btn(pyxel.KEY_RIGHT):
-                self.player_x = min(self.player_x + 2, self.width - 7)
+                self.player_x = min(self.player_x + 2, Game.width(Game()) - 7)
                 self.pos_x1, self.pos_y1, self.pos_x2, self.pos_y2 = 7, 0, 7, 7
             elif pyxel.btn(pyxel.KEY_A) or pyxel.btn(pyxel.KEY_LEFT):
                 self.player_x = max(self.player_x - 2, 0)
@@ -176,6 +160,50 @@ class PyxelRain:
             else:
                 self.pos_x1, self.pos_y1, self.pos_x2, self.pos_y2 = 0, 0, 7, 7
         else:
-            self.player_y = min(self.player_y + 0.3, self.height)
+            self.player_y = min(self.player_y + 0.3, Game.height(Game()))
 
-PyxelRain()
+class NPC:
+    enemy = [(i * 8, randint(0, 300)) for i in range(10)]
+    friend = [(i * 8, randint(0, 300)) for i in range(10)]
+
+
+    def update_enemy(self, x, y):
+        if abs(x - Player.player_x(Player())) < 7 and abs(y - (-Player.player_y(Player()))) < 7:
+            y = 400
+            self.is_alive = False
+            pyxel.play(1, 1)
+        if self.is_alive:
+            y -= 2
+        elif not self.is_alive:
+            y -= 0.2
+        if y < -300:
+            y += 300
+            x = randint(0, 93)
+        return x, y
+
+    def update_friend(self, x, y):
+        if abs(x - Player.player_x(Player())) < 7 and abs(y - (-Player.player_y(Player()))) < 7:
+            y = 400
+            Game.score += 10
+            pyxel.play(0, 0)
+        if self.is_alive:
+            y -= 2
+        elif not self.is_alive:
+            y -= 0.2
+
+        if y < -300:
+            y += 300
+            x = randint(0, 93)
+
+        return x, y
+
+    def draw_guys(self):
+        pyxel.blt(Player.player_x(Player()), Player.player_y(Player()), 0, Player.coords(Player()), 13)  # гг
+        for x, y in self.enemy:  # рисуем врагов
+            pyxel.blt(x, -y, 0, 0, 7, 7, 13, 13)
+        for x, y in self.friend:  # рисуем друзей
+            pyxel.blt(x, -y, 0, 7, 7, 13, 13, 13)
+
+
+Game()
+

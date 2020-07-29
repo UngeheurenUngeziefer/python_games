@@ -59,7 +59,7 @@ class SquareRun:
         elif self.start_game == 1:                                                   # ЭКРАН Игра
             pyxel.cls(13)
             pyxel.load("square_run_assets.pyxres")                                   # загружаем скины
-            offset = (pyxel.frame_count // 8) % 160                                  # рисуем облака
+            offset = (pyxel.frame_count // 8) % 160
             for i in range(2):
                 for x, y in self.clouds:
                     pyxel.blt(x + i * 160 - offset, y, 0, 0, 32, 56, 8, 12)
