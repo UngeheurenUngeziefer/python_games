@@ -4,14 +4,14 @@ from time import sleep
 
 class Bullet(Sprite):
 	"""Класс для управления пулями, выпущенными кораблем."""
-	def __init__(self, ai_settings, screen, ship):
+	def __init__(self, ai_settings, screen, ship, centerx):
 		"""Создает объект пули в текущей позиции корабля."""
 		super().__init__()
 		self.screen = screen
 		# Создание пули в позиции (0,0) и назначение правильной позиции.
 		self.rect = pygame.Rect(0, 0, ai_settings.bullet_width, 
 			ai_settings.bullet_height)
-		self.rect.centerx = ship.rect.centerx + 20
+		self.rect.centerx = centerx
 		self.flag_guns = True
 
 		self.rect.top = ship.rect.top
