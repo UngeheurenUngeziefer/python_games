@@ -5,7 +5,7 @@ Square pixel-style game, with enemies, friends, moving and stable backgrounds.<b
 
 #### 2. Road Rush<br />
 Race pixel-style game.<br /> Controls: `arrows` and `ad`, `R` for restart `Q` to quit<br /><br />
-<img src="/PyXel/Road_Rush/pics/lvl_1.gif" width="300">
+<img src="/PyXel/Road_Rush/pics/lvl_1.gif" width="400">
 
 #### 3. Pyxel Rain<br />
 You need to avoid brown triangles and catch green circles.<br /> Controls: `arrows` and `ad`, `R` for restart `Q` to quit<br /><br />
